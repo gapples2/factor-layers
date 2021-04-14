@@ -9,7 +9,7 @@ function update(){
         formatLayers.push(format(num,num.gte(1e3)?2:0))
     })
     document.getElementById("layers").innerText=formatLayers.join(", ")
-    document.getElementById("new_layer_cost").innerText = nameThings[player.layers.length-1]+" layer for " + format(tmp.factorCost,2)
+    document.getElementById("new_layer_cost").innerText = (player.layers.length>=9?("layer "+format(player.layers.length+1)):("the "+nameThings[player.layers.length-1]+" layer"))+ " for " + format(tmp.factorCost,2)
     let tupgids = [0,1,2]
     let types = ["cost","eff","amt"]
     tupgids.forEach(id=>{
@@ -19,12 +19,12 @@ function update(){
             if(type=="eff"){
                 let effect = tmp.TUeff[id]
                 if(id!=0)element.innerText = format(effect,2)
-                else element.innerHTML = format(effect[0],1)+"<sup>"+format(effect[1],2)+"<sup>"+player.layers.length+"</sup></sup> rounded down"
+                else element.innerHTML = format(effect[0],2)+"<sup>"+format(effect[1],2)+"<sup>"+player.layers.length+"</sup></sup> rounded down"
             }
             if(type=="amt")element.innerText = format(player.tupgs[id])
         })
     })
-    if(player.totalite.gte(tmp.limit)){
+    if(player.totalite.gte(tmp.limit)&&!(player.overflowAmt>=30)){
         changeDisplay("overflow_div",true)
         changeDisplay("overflow_reset",true)
     }else changeDisplay("overflow_reset",false)
@@ -34,17 +34,22 @@ function update(){
         let descs = [
             "Lower the second exponent in the new layer formula by 0.1.",
             "Raise layer gain to 1.1.",
-            "Gaining layers is 2x faster."
+            "Gaining layers is 2x faster.",
+            "Multiply base factor gain by 3.",
+            "Every totalite upgrade bought multiplies factor gain by 1.01.",
+            "Increase all factors at the same time.",
+            "Totalite upgrades don't reset anything.",
+            "Autobuy totalite upgrades.",
         ]
-        let costs = [1,1,2]
-        for(let x=0;x<3;x++){
+        let costs = oupgCosts
+        for(let x=0;x<costs.length;x++){
             let element=document.createElement("button")
-            element.innerHTML=`Overflow Upgrade ${x+1}<br>${descs[x]}<br>Cost: ${costs[x]}.<br>[<span id="overflow_upg_${x+1}_bought"></span>]`
+            element.innerHTML=`Overflow Upgrade ${x+1}<br>${descs[x]}<br>Cost: ${costs[x]} OP.<br>[<span id="overflow_upg_${x+1}_bought"></span>]`
             element.onclick=bOU(x)
             upgDiv.appendChild(element)
         }
     }
-    for(let x=0;x<3;x++){
+    for(let x=0;x<oupgCosts.length;x++){
         let element = document.getElementById("overflow_upg_"+(x+1)+"_bought")
         element.innerText = hasOPupgrade(x)?"BOUGHT":"IN SHOP"
     }

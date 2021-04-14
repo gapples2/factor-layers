@@ -14,20 +14,20 @@
         <script src="js/saving.js" defer></script>
 
         <script src="js/game.js" defer></script>
-        <h1>Current Stats: [<span id="resource_totalite"></span>] <span id="layers"></span></h1><br><br>
-        <button onclick="generateNewLayer()" id="add_layer_button" style="display: none;">Gain the <span id="new_layer_cost"></span> totalite.</button><br>
-        <button onclick="buyTotaliteUpgrade(0)" id="tupg_1" style="display: none;">Make the new layer formula better.<br>Cost: <span id="tupg_cost_1"></span> totalite.<br>Current Effect: <span id="tupg_eff_1"></span>.<br>Amount Bought: <span id="tupg_amt_1"></span>.</button><br>
-        <button onclick="buyTotaliteUpgrade(1)" id="tupg_2" style="display: none;">Increase base layer gain by 1.<br>Cost: <span id="tupg_cost_2"></span> totalite.<br>Current Effect: +<span id="tupg_eff_2"></span>.<br>Amount Bought: <span id="tupg_amt_2"></span>.</button><br>
+        <h2>Current Stats: [<span id="resource_totalite"></span>] <span id="layers"></span></h2><br><br>
+        <button onclick="generateNewLayer()" id="add_layer_button" style="display: none;">Gain <span id="new_layer_cost"></span> totalite.</button><br>
+        <button onclick="buyTotaliteUpgrade(0)" id="tupg_1" style="display: none;">Make the new layer formula better.<br>Cost: <span id="tupg_cost_1"></span> totalite.<br>Current Effect: <span id="tupg_eff_1"></span>.<br>Amount Bought: <span id="tupg_amt_1"></span>.</button>
+        <button onclick="buyTotaliteUpgrade(1)" id="tupg_2" style="display: none;">Increase base layer gain by 1.<br>Cost: <span id="tupg_cost_2"></span> totalite.<br>Current Effect: +<span id="tupg_eff_2"></span>.<br>Amount Bought: <span id="tupg_amt_2"></span>.</button>
         <button onclick="buyTotaliteUpgrade(2)" id="tupg_3" style="display: none;">Multiply layer gain by 1.5.<br>Cost: <span id="tupg_cost_3"></span> totalite.<br>Current Effect: <span id="tupg_eff_3"></span>x.<br>Amount Bought: <span id="tupg_amt_3"></span>.</button>
         <div id="overflow_div" style="display:none">
             <br>
-            <br>
             <button onclick="overflow()" id="overflow_reset" style="display:none">
                 Overflow [+1 OP]
-            </button><br>
+            </button>
             You have done <span id="resource_overflowAmt"></span> overflow(s). This increases the maximum amount of any number to <span id="overflow_limit"></span>.<br>
             You have <span id="resource_op"></span> overflow points.
-            <div id="overflow_upgs"></div>
+            <div id="overflow_upgs"></div><br><br>
+            <button onclick="respecOPupgrades()">Respec overflow upgrades (does an overflow reset).</button>
         </div><br><br>
         <button onclick="saveExport()">Export</button><br>
         <button onclick="saveImport()">Import</button>

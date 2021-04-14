@@ -1,7 +1,8 @@
 var player = {}
 const D = x=>new Decimal(x)
-const nameThings = ["second","third","fourth","fifth","sixth","seventh","eighth","ninth","tenth"]
-const version = ["0.00.2","Export and Import"]
+const nameThings = ["second","third","fourth","fifth","sixth","seventh","eighth","ninth","tenth","eleventh"]
+const version = ["0.01","The 8th Dimension"]
+const oupgCosts = [1,1,2,2,3,5,7,7]
 
 function startingPlayer(){
     return {
@@ -53,7 +54,10 @@ function increaseFactor(id,amt){
 }
 
 function getFactorIncrease(){
-    let amt = D(1).add(tmp.TUeff[1]).mul(tmp.TUeff[2])
+    let base = D(1).add(tmp.TUeff[1])
+    if(hasOPupgrade(3))base=base.mul(3)
+    let amt = base.mul(tmp.TUeff[2])
+    if(hasOPupgrade(4))base=base.mul(D(1.01).pow(D(player.tupgs[0]).add(player.tupgs[1]).add(player.tupgs[2])))
     if(hasOPupgrade(1))amt=amt.pow(1.1)
     return amt.floor()
 }
@@ -75,10 +79,20 @@ function format(x,p=0,infinity=true){
 
 function loop(diff){
     diff/=1000
+    if(hasOPupgrade(7)&&canAffordAnyTotaliteUpgrade()){
+        for(let x=0;x<3;x++){
+            buyTotaliteUpgrade(x)
+        }
+    }
     let gain = tmp.gain
     player.factorStuff.amountWaiting=player.factorStuff.amountWaiting.add(gain.mul(diff))
     if(player.factorStuff.amountWaiting.mul(hasOPupgrade(2)?2:1).gte(gain)){
-        increaseFactor(player.factorStuff.nextForGain,gain)
+        if(!hasOPupgrade(5))increaseFactor(player.factorStuff.nextForGain,gain)
+        else{
+            for(let x=0;x<player.layers.length;x++){
+                increaseFactor(x,gain)
+            }
+        }
         player.factorStuff.amountWaiting=D(0)
         player.factorStuff.nextForGain++
         if(player.factorStuff.nextForGain>=player.layers.length)player.factorStuff.nextForGain=0
@@ -90,18 +104,24 @@ function baseloop(){
     player.time=Date.now()
 }
 
+function canAffordAnyTotaliteUpgrade(){
+    return tmp.tupgs[0].lte(player.totalite)||tmp.tupgs[1].lte(player.totalite)||tmp.tupgs[2].lte(player.totalite)
+}
+
 function getFactorCost(){
     return D(tmp.TUeff[0][0]).pow(D(tmp.TUeff[0][1]).pow(player.layers.length-1)).floor()
 }
 
 function buyTotaliteUpgrade(id){
-    if(player.totalite.min(tmp.limit).gte(tmp.tupgs[id])&&(id==0?getTupgAmt(id)<10:true)){
-        player.totalite=D(1)
-        for(let x=0;x<player.layers.length;x++){
-            player.layers[x]=D(1)
+    if(player.totalite.gte(tmp.tupgs[id])&&player.totalite.lt(tmp.limit)){
+        if(!hasOPupgrade(6)){
+            player.totalite=D(1)
+            for(let x=0;x<player.layers.length;x++){
+                player.layers[x]=D(1)
+            }
+            player.factorStuff.nextForGain=0
+            player.factorStuff.amountWaiting=D(0)
         }
-        player.factorStuff.nextForGain=0
-        player.factorStuff.amountWaiting=D(0)
         player.tupgs[id]++
         let costScaling = tmp.TUcostScaling
         let cSS = [3,5,3]
@@ -118,6 +138,7 @@ function getTupgEffect(id){
     switch(id){
         case 0: {
             let effect=[D(10).minus(upgAmt.div(2)),2]
+            if(upgAmt>=10)effect[0]=D(5).minus((upgAmt-10)/100)
             if(hasOPupgrade(0))effect[1]=1.9
             return effect
         }
@@ -136,20 +157,22 @@ function getTupgAmt(id){
     return player.tupgs[id]
 }
 
-function overflow(){
+function overflow(forced=false){
     player.totalite=D(1)
     player.layers=[D(1)]
     player.factorStuff.nextForGain=0
     player.factorStuff.amountWaiting=D(0)
     player.tupgs=[0,0,0]
-    player.overflowAmt++
-    player.op++
+    if(!forced){
+        player.overflowAmt++
+        player.op++
+    }
     loadTmp(true)
 }
 
 function buyOverflowUpgrade(id){
-    let costs = [1,1,2]
-    if(costs[id]<=player.op){
+    let costs = oupgCosts
+    if(costs[id]<=player.op&&!hasOPupgrade(id)){
         player.op-=costs[id]
         player.oupgs.push(id) 
         if(id==0){tmp.TUeff[0]=getTupgEffect(0);tmp.factorCost=getFactorCost()}
@@ -159,6 +182,14 @@ function buyOverflowUpgrade(id){
 
 function hasOPupgrade(id){
     return player.oupgs.includes(id)
+}
+
+function respecOPupgrades(){
+    let doComfirm = confirm("Are you sure you want to respec? It will do an overflow reset without you gaining anything.")
+    if(!doComfirm)return;
+    player.oupgs=[]
+    player.op=player.overflowAmt
+    overflow(true)
 }
 
 loadGame()

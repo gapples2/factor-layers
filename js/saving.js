@@ -36,6 +36,10 @@ function decimalize(save){
             if(unlocks[x])changeDisplay("tupg_"+(x+1),true)
         }
     }
+    if(player.overflowAmt==0)changeDisplay("overflow_div",false)
+    else changeDisplay("overflow_div",true)
+    if(!(format(player.totalite)=="Infinity"))changeDisplay("overflow_reset",false)
+    else changeDisplay("overflow_reset",true)
     return {player,tmp}
 }
 
@@ -68,7 +72,9 @@ function saveImport(){
             }
         }
         if(player.overflowAmt==0)changeDisplay("overflow_div",false)
+        else changeDisplay("overflow_div",true)
         if(!(format(player.totalite)=="Infinity"))changeDisplay("overflow_reset",false)
+        else changeDisplay("overflow_reset",true)
         alert("Success!")
     }
 }
