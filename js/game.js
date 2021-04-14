@@ -1,6 +1,7 @@
 var player = {}
 const D = x=>new Decimal(x)
-const nameThings = ["second","third","fourth","fifth","sixth","seventh","eighth","ninth"]
+const nameThings = ["second","third","fourth","fifth","sixth","seventh","eighth","ninth","tenth"]
+const version = ["0.00.1","Saving"]
 
 function startingPlayer(){
     return {
@@ -33,9 +34,14 @@ function generateNewLayer(){
 }
 
 function loadGame(){
-    player=startingPlayer()
-    player.time = D(Date.now()).toFixed(0)
-    loadTmp()
+    if(localStorage.factorLayers){
+        load()
+    }else{
+        player=startingPlayer()
+        player.time = D(Date.now()).toFixed(0)
+        loadTmp()
+    }
+    setInterval(save,1000)
     setInterval(update,20)
     setInterval(baseloop,20)
 }

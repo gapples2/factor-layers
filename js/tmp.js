@@ -8,7 +8,3 @@ function loadTmp(onreset=false){
     tmp.TUcostScaling = [14,11,25]
     tmp.limit = D(2).pow((player.overflowAmt+1)*20)
 }
-
-function updateTmp(){
-
-}

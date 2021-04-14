@@ -58,6 +58,8 @@ function update(){
         }
     }
     if(!player.tupgsUnlocked[3]&&player.totalite.gte(10)){player.tupgsUnlocked[3]=true;changeDisplay("add_layer_button",true)}
+    let versionE = document.getElementById("version")
+    if(versionE.innerText=="")versionE.innerText="Version "+version[0]+": "+version[1]
 }
 
 function changeDisplay(id,show){
