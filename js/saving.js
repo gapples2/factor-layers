@@ -33,8 +33,42 @@ function decimalize(save){
         if(x==3){
             if(unlocks[3])changeDisplay("add_layer_button",true)
         }else{
-            if(unlocks[x])changeDisplay("tupg_"+(x+1))
+            if(unlocks[x])changeDisplay("tupg_"+(x+1),true)
         }
     }
     return {player,tmp}
+}
+
+function saveExport(){
+    const copyToClipboard = str => {
+        const el = document.createElement('textarea');
+        el.value = str;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      };
+    copyToClipboard(btoa(JSON.stringify({player,tmp})))
+    alert("Copied to clipboard.")
+}
+function saveImport(){
+    let save = prompt("Enter your save here.")
+    if(!!save){
+        save = decimalize(JSON.parse(atob(save)))
+        player=save.player
+        tmp=save.tmp
+        let unlocks = player.tupgsUnlocked
+        for(let x=0;x<4;x++){
+            if(x==3){
+                if(unlocks[3])changeDisplay("add_layer_button",true)
+                else changeDisplay("add_layer_button",false)
+            }else{
+                if(unlocks[x])changeDisplay("tupg_"+(x+1),true)
+                else changeDisplay("tupg_"+(x+1),false)
+            }
+        }
+        if(player.overflowAmt==0)changeDisplay("overflow_div",false)
+        if(!(format(player.totalite)=="Infinity"))changeDisplay("overflow_reset",false)
+        alert("Success!")
+    }
 }

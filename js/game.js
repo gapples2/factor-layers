@@ -1,7 +1,7 @@
 var player = {}
 const D = x=>new Decimal(x)
 const nameThings = ["second","third","fourth","fifth","sixth","seventh","eighth","ninth","tenth"]
-const version = ["0.00.1","Saving"]
+const version = ["0.00.2","Export and Import"]
 
 function startingPlayer(){
     return {
