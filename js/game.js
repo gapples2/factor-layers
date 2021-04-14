@@ -1,7 +1,7 @@
 var player = {}
 const D = x=>new Decimal(x)
 const nameThings = ["second","third","fourth","fifth","sixth","seventh","eighth","ninth","tenth","eleventh"]
-const version = ["0.01","The 8th Dimension"]
+const version = ["0.01.1","The 8th Dimension (small bug fix)"]
 const oupgCosts = [1,1,2,2,3,5,7,7]
 
 function startingPlayer(){
